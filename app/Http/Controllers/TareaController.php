@@ -5,65 +5,71 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Tarea;
+
 class TareaController extends Controller
 {
-    public function ListarTareas(Request $request){
+    public function ListarTareas(Request $request)
+    {
         return Tarea::all();
     }
 
-    public function ListarUnaTarea(Request $request, $id){
+    public function ListarUnaTarea(Request $request, $id)
+    {
         return Tarea::findOrFail($id);
     }
 
-    public function InsertarTarea(Request $request){
-        $validation = Validator::make($request->all(),[
+    public function InsertarTarea(Request $request)
+    {
+        $validation = Validator::make($request->all(), [
             'titulo' => 'required|max:255',
             'contenido' => 'nullable',
             'estado' => 'required|max:50',
             'autor' => 'required|max:100',
         ]);
 
-        if($validation->fails())
-        return response($validation->errors(),403);
+        if ($validation->fails())
+            return response($validation->errors(), 403);
 
-        $tarea=new Tarea();
+        $tarea = new Tarea();
 
-        $tarea->titulo = $request -> post ('titulo');
-        $tarea-> contenido = $request ->post('contenido');
-        $tarea-> estado = $request ->post('estado');
-        $tarea-> autor =$request ->post('autor');
+        $tarea->titulo = $request->post('titulo');
+        $tarea->contenido = $request->post('contenido');
+        $tarea->estado = $request->post('estado');
+        $tarea->autor = $request->post('autor');
 
         $tarea->save();
 
         return $tarea;
     }
 
-    public function EliminarProducto(Request $request, $id){
-        $tarea=Tarea::findOrFail($id);
+    public function EliminarProducto(Request $request, $id)
+    {
+        $tarea = Tarea::findOrFail($id);
 
-        $tarea -> delete();
+        $tarea->delete();
 
         return [
             "mensaje" => "El producto con id $id ha sido eliminado correctamente"
         ];
     }
 
-    public function ModificarProducto(Request $request, $id){
-        $tarea=Tarea::findOrFail($id);
+    public function ModificarProducto(Request $request, $id)
+    {
+        $tarea = Tarea::findOrFail($id);
 
-        $validation = Validator::make($request->all(),[
+        $validation = Validator::make($request->all(), [
             'titulo' => 'required|max:255',
             'contenido' => 'nullable',
             'estado' => 'required|max:50',
             'autor' => 'required|max:100',
         ]);
 
-        if($validation->fails())
-            return response($validation->errors(),403);
+        if ($validation->fails())
+            return response($validation->errors(), 403);
 
-        $tarea -> update($request->all());
+        $tarea->update($request->all());
 
-        $tarea -> save();
+        $tarea->save();
 
         return $tarea;
 
