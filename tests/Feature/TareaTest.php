@@ -94,4 +94,47 @@ class TareaTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_ModificarTareaExistente()
+    {
+        $estructura = [
+            'id',
+            'titulo',
+            'contenido',
+            'estado',
+            'autor',
+            'created_at',
+            'updated_at',
+            'deleted_at'
+        ];
+
+        $response = $this -> put('/api/tarea/1',[
+            "titulo" => "Entrega Final",
+            "contenido" => "Entregar en fecha y forma todo lo requerido",
+            "estado" => "Por hacer",
+            "autor" => "Eduardo",
+        ]);
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure($estructura);
+
+        $response->assertJsonFragment([
+            "titulo" => "Entrega Final",
+            "contenido" => "Entregar en fecha y forma todo lo requerido",
+            "estado" => "Por hacer",
+            "autor" => "Eduardo",
+        ]);
+    }
+
+    public function test_ModificarTareaInexistente()
+    {
+        $response = $this -> put('/api/tarea/25421',[
+
+        ]);
+
+        $response->assertStatus(404);
+
+    }
+
 }
