@@ -5,103 +5,142 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Tarea;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TareaController extends Controller
 {
-    public function ListarTareas(Request $request)
+    public function ListarTarea(Request $request)
     {
-        return Tarea::all();
+        try {
+            return Tarea::all();
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
-
     public function ListarUnaTarea(Request $request, $id)
     {
-        return Tarea::findOrFail($id);
+        try {
+            $tarea = Tarea::findOrFail($id);
+            return $tarea;
+        } catch (ModelNotFoundException $e) {
+            return response(['error' => 'La tarea no existe'], 404);
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
 
     public function InsertarTarea(Request $request)
     {
-        $validation = Validator::make($request->all(), [
-            'titulo' => 'required|max:255',
-            'contenido' => 'nullable',
-            'estado' => 'required|max:50',
-            'autor' => 'required|max:100',
-        ]);
+        try {
+            $validation = Validator::make($request->all(), [
+                'titulo' => 'required|max:255',
+                'contenido' => 'nullable',
+                'estado' => 'required|max:50',
+                'autor' => 'required|max:100',
+            ]);
 
-        if ($validation->fails())
-            return response($validation->errors(), 403);
+            if ($validation->fails())
+                return response($validation->errors(), 403);
 
-        $tarea = new Tarea();
+            $tarea = new Tarea();
 
-        $tarea->titulo = $request->post('titulo');
-        $tarea->contenido = $request->post('contenido');
-        $tarea->estado = $request->post('estado');
-        $tarea->autor = $request->post('autor');
+            $tarea->titulo = $request->post('titulo');
+            $tarea->contenido = $request->post('contenido');
+            $tarea->estado = $request->post('estado');
+            $tarea->autor = $request->post('autor');
 
-        $tarea->save();
+            $tarea->save();
 
-        return $tarea;
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
-
     public function EliminarTarea(Request $request, $id)
     {
-        $tarea = Tarea::findOrFail($id);
+        try {
+            $tarea = Tarea::findOrFail($id);
 
-        $tarea->delete();
+            $tarea->delete();
 
-        return [
-            "mensaje" => "La tarea con id $id ha sido eliminada correctamente"
-        ];
+            return [
+                "mensaje" => "La tarea con ID $id ha sido eliminada correctamente"
+            ];
+        } catch (ModelNotFoundException $e) {
+            return response(['error' => 'La tarea no existe'], 404);
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
 
     public function ModificarTarea(Request $request, $id)
     {
-        $tarea = Tarea::findOrFail($id);
+        try {
+            $tarea = Tarea::findOrFail($id);
 
-        $validation = Validator::make($request->all(), [
-            'titulo' => 'required|max:255',
-            'contenido' => 'nullable',
-            'estado' => 'required|max:50',
-            'autor' => 'required|max:100',
-        ]);
+            $validation = Validator::make($request->all(), [
+                'titulo' => 'required|max:255',
+                'contenido' => 'nullable',
+                'estado' => 'required|max:50',
+                'autor' => 'required|max:100',
+            ]);
 
-        if ($validation->fails())
-            return response($validation->errors(), 403);
+            if ($validation->fails())
+                return response($validation->errors(), 403);
 
-        $tarea->update($request->all());
+            $tarea->update($request->all());
 
-        $tarea->save();
+            $tarea->save();
 
-        return $tarea;
-
+            return $tarea;
+        } catch (ModelNotFoundException $e) {
+            return response(['error' => 'La tarea no existe'], 404);
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
 
-    public function BuscarPorTitulo(Request $request, $titulo){
-        $tarea = Tarea::where('titulo', $titulo)->get();
+    public function BuscarPorTitulo(Request $request, $titulo)
+    {
+        try {
+            $tarea = Tarea::where('titulo', $titulo)->get();
 
-        if ($tarea->isEmpty()) {
-            return response(['message' => 'No hay ninguna tarea con ese título'], 404);
+            if ($tarea->isEmpty()) {
+                return response(['message' => 'No hay tareas con ese título'], 404);
+            }
+
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
         }
+    }
+    public function BuscarPorAutor(Request $request, $autor)
+    {
+        try {
+            $tarea = Tarea::where('autor', $autor)->get();
 
-        return $tarea;
+            if ($tarea->isEmpty()) {
+                return response(['message' => 'No hay tareas con ese autor'], 404);
+            }
+
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
+        }
     }
 
-    public function BuscarPorAutor(Request $request, $autor){
-        $tarea = Tarea::where('autor', $autor)->get();
+    public function BuscarPorEstado(Request $request, $estado)
+    {
+        try {
+            $tarea = Tarea::where('estado', $estado)->get();
 
-        if ($tarea->isEmpty()) {
-            return response(['message' => 'No hay ninguna tarea con ese autor'], 404);
+            if ($tarea->isEmpty()) {
+                return response(['message' => 'No hay tareas con ese estado'], 404);
+            }
+
+            return $tarea;
+        } catch (\Exception $e) {
+            return response(['error' => 'Ha ocurrido un error en la solicitud'], 500);
         }
-
-        return $tarea;
-    }
-
-    public function BuscarPorEstado(Request $request, $estado){
-        $tarea = Tarea::where('estado', $estado)->get();
-
-        if ($tarea->isEmpty()) {
-            return response(['message' => 'No hay ninguna tarea con ese estado'], 404);
-        }
-
-        return $tarea;
     }
 }
