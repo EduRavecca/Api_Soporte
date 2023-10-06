@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class TareaController extends Controller
 {
-    public function ListarTarea(Request $request)
+    public function ListarTareas(Request $request)
     {
         try {
             return Tarea::all();

@@ -144,7 +144,7 @@ class TareaTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonFragment([
-            "mensaje" => "La tarea con id 1 ha sido eliminada correctamente"
+            "mensaje" => "La tarea con ID 1 ha sido eliminada correctamente"
         ]);
 
        $this->assertDatabaseMissing('tarea', [
