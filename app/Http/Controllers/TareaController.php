@@ -75,4 +75,33 @@ class TareaController extends Controller
 
     }
 
+    public function BuscarPorTitulo(Request $request, $titulo){
+        $tarea = Tarea::where('titulo', $titulo)->get();
+
+        if ($tarea->isEmpty()) {
+            return response(['message' => 'No hay ninguna tarea con ese título'], 404);
+        }
+
+        return $tarea;
+    }
+
+    public function BuscarPorAutor(Request $request, $autor){
+        $tarea = Tarea::where('autor', $autor)->get();
+
+        if ($tarea->isEmpty()) {
+            return response(['message' => 'No hay ninguna tarea con ese autor'], 404);
+        }
+
+        return $tarea;
+    }
+
+    public function BuscarPorEstado(Request $request, $estado){
+        $tarea = Tarea::where('estado', $estado)->get();
+
+        if ($tarea->isEmpty()) {
+            return response(['message' => 'No hay ninguna tarea con ese estado'], 404);
+        }
+
+        return $tarea;
+    }
 }
