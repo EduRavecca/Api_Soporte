@@ -42,18 +42,18 @@ class TareaController extends Controller
         return $tarea;
     }
 
-    public function EliminarProducto(Request $request, $id)
+    public function EliminarTarea(Request $request, $id)
     {
         $tarea = Tarea::findOrFail($id);
 
         $tarea->delete();
 
         return [
-            "mensaje" => "El producto con id $id ha sido eliminado correctamente"
+            "mensaje" => "La tarea con id $id ha sido eliminada correctamente"
         ];
     }
 
-    public function ModificarProducto(Request $request, $id)
+    public function ModificarTarea(Request $request, $id)
     {
         $tarea = Tarea::findOrFail($id);
 

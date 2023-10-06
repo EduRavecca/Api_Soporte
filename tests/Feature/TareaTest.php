@@ -48,7 +48,7 @@ class TareaTest extends TestCase
 
     public function test_ListarTareas()
     {
-        $response = $this->get('/api/tarea');
+        $response = $this -> get('/api/tarea');
 
         $response->assertStatus(200);
 
@@ -64,5 +64,34 @@ class TareaTest extends TestCase
                     'deleted_at'
                 ]
         ]);
+    }
+
+    public function test_ListarTareaExistente()
+    {
+        $estructura = [
+            'id',
+            'titulo',
+            'contenido',
+            'estado',
+            'autor',
+            'created_at',
+            'updated_at',
+            'deleted_at'
+        ];
+
+        $response = $this -> get('/api/tarea/1');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonCount(8);
+
+        $response->assertJsonStructure($estructura);
+    }
+
+    public function test_ListarTareaInexistente()
+    {
+        $response = $this -> get('api/tarea/98992');
+
+        $response->assertStatus(404);
     }
 }
