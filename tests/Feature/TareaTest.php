@@ -137,4 +137,28 @@ class TareaTest extends TestCase
 
     }
 
+    public function test_EliminarTareaExistente()
+    {
+        $response = $this -> delete('/api/tarea/1');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            "mensaje" => "La tarea con id 1 ha sido eliminada correctamente"
+        ]);
+
+       $this->assertDatabaseMissing('tarea', [
+        'id' => '1',
+        'deleted_at' => null
+        ]);
+
+        Tarea::withTrashed()->where("id",1)->restore();
+    }
+
+    public function test_EliminarTareaInexistente()
+    {
+        $response = $this -> delete('/api/tareas/87432');
+
+        $response->assertStatus(404);
+    }
 }
