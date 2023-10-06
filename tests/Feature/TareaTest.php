@@ -161,4 +161,38 @@ class TareaTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_BuscarPorTituloExistente()
+    {
+        $response = $this->get('/api/tarea/titulo/Bucles PHP');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'titulo' => 'Bucles PHP',
+        ]);
+    }
+
+    public function test_BuscarPorEstadoExistente()
+    {
+        $response = $this->get('/api/tarea/estado/En curso');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'estado' => 'En curso',
+        ]);
+    }
+
+    public function test_BuscarPorAutorExistente()
+    {
+        $response = $this->get('/api/tarea/autor/Mateo');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonFragment([
+            'autor' => 'Mateo',
+        ]);
+    }
+
 }

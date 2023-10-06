@@ -12,11 +12,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        \App\Models\Tarea::factory(10)->create();
+        \App\Models\Tarea::factory(1)->create(
+            [
+                "titulo" => "Bucles PHP",
+                "contenido" => "Capacitar sobre los bucles en PHP",
+                "estado" => "En curso",
+                "autor" => "Mateo",
+            ]
+        );
     }
 }
