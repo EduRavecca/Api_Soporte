@@ -14,32 +14,32 @@ class TareaTest extends TestCase
      */
     public function test_InsertarTarea()
     {
-        $response = $this -> post('/api/tareas',[
+        $response = $this -> post('/api/tarea',[
             "titulo" => "Escrito Programación",
             "contenido" => "Estudiar para el escrito",
-            "estado" => "En proceso",
-            "autor" => "Eduardo",
+            "estado" => "Finalizado",
+            "autor" => "Juan",
         ]);
 
         $response->assertStatus(201);
 
         $response->assertJsonCount(7);
 
-        $this->assertDatabaseHas('tareas', [
+        $this->assertDatabaseHas('tarea', [
             "titulo" => "Escrito Programación",
             "contenido" => "Estudiar para el escrito",
-            "estado" => "En proceso",
-            "autor" => "Eduardo",
+            "estado" => "Finalizado",
+            "autor" => "Juan",
         ]);
 
     }
 
     public function test_InsertarTareaConErrores()
     {
-        $response = $this -> post('/api/tareas',[
+        $response = $this -> post('/api/tarea',[
             "contenido" => "Estudiar para el escrito",
-            "estado" => "En proceso",
-            "autor" => "Eduardo",
+            "estado" => "Finalizado",
+            "autor" => "Juan",
         ]);
 
         $response->assertStatus(403);
